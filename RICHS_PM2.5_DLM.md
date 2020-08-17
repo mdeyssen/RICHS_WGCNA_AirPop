@@ -246,7 +246,7 @@ DLM_BWperc_plot
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_F13perc-1.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_F13perc.pdf")
+pdf("Plots/PM25_DLM_F13perc.pdf",width=6,height=6)
 DLM_BWperc_plot
 dev.off()
 ```
@@ -425,7 +425,7 @@ SGA_DLM_plot
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_SGA-1.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_SGA.pdf")
+pdf("Plots/PM25_DLM_SGA.pdf",width=6,height=6)
 SGA_DLM_plot
 dev.off()
 ```
@@ -604,7 +604,7 @@ DLM_LGA_plot
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_LGA.pdf")
+pdf("Plots/PM25_DLM_LGA.pdf",width=6,height=6)
 DLM_LGA_plot
 dev.off()
 ```
@@ -806,7 +806,7 @@ DLM_BWperc_plot_Female<-ggplot(predpmdt, aes(x, y)) +
   theme_classic()+
   theme(
   axis.title = element_blank())+
-  theme(axis.text=element_text(size=15,  face="bold"))
+  theme(axis.text=element_text(size=24,  face="bold"))
 
 DLM_BWperc_plot_Female
 ```
@@ -814,7 +814,7 @@ DLM_BWperc_plot_Female
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-1.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_F13perc_Female.pdf")
+pdf("Plots/PM25_DLM_F13perc_Female.pdf",width=6,height=6)
 DLM_BWperc_plot_Female
 dev.off()
 
@@ -901,7 +901,7 @@ ggplot(predpmdt, aes(x, y)) +
   theme_classic()+
   theme(
   axis.title = element_blank())+
-  theme(axis.text=element_text(size=15,  face="bold"))
+  theme(axis.text=element_text(size=24,  face="bold"))
 
 DLM_BWperc_plot_Male
 ```
@@ -909,7 +909,7 @@ DLM_BWperc_plot_Male
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_F13perc_Male.pdf")
+pdf("Plots/PM25_DLM_F13perc_Male.pdf",width=6,height=6)
 DLM_BWperc_plot_Male
 dev.off()
 
@@ -1007,7 +1007,7 @@ DLM_SGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
   theme_classic()+
   theme(
   axis.title = element_blank())+
-  theme(axis.text=element_text(size=15,  face="bold"))
+  theme(axis.text=element_text(size=24,  face="bold"))
 
 DLM_SGA_female_plot
 ```
@@ -1015,7 +1015,7 @@ DLM_SGA_female_plot
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-1.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_SGA_Females.pdf")
+pdf("Plots/PM25_DLM_SGA_Females.pdf",width=6,height=6)
 DLM_SGA_female_plot
 dev.off()
 
@@ -1098,7 +1098,7 @@ ggplot(predpmdt, aes(x, y)) +
   theme_classic()+
   theme(
   axis.title = element_blank())+
-  theme(axis.text=element_text(size=15,  face="bold"))
+  theme(axis.text=element_text(size=24,  face="bold"))
 
 DLM_SGA_male_plot
 ```
@@ -1106,7 +1106,7 @@ DLM_SGA_male_plot
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-2.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_SGA_Males.pdf")
+pdf("Plots/PM25_DLM_SGA_Males.pdf",width=6,height=6)
 DLM_SGA_male_plot
 dev.off()
 
@@ -1130,13 +1130,13 @@ write.csv(prd_all, file = "Data/PM25_DLM_SGA_Males_predfit.csv",row.names=FALSE)
 
 ``` r
 LGA_F<-Demo%>%
-  filter(!F13Group=="LGA")%>%
-  mutate(F13Group=factor(F13Group,levels=c("AGA","SGA")))%>%
+  filter(!F13Group=="SGA")%>%
+  mutate(F13Group=factor(F13Group,levels=c("AGA","LGA")))%>%
   filter(Sex=="Female")
 
 LGA_M<-Demo%>%
-  filter(!F13Group=="LGA")%>%
-  mutate(F13Group=factor(F13Group,levels=c("AGA","SGA")))%>%
+  filter(!F13Group=="SGA")%>%
+  mutate(F13Group=factor(F13Group,levels=c("AGA","LGA")))%>%
   filter(Sex=="Male")
 
 ###################################### Males
@@ -1203,14 +1203,14 @@ DLM_LGA_male_plot<-ggplot(predpmdt, aes(x, y)) +
   theme_classic()+
   theme(
   axis.title = element_blank())+
-  theme(axis.text=element_text(size=15,  face="bold"))
+  theme(axis.text=element_text(size=24,  face="bold"))
 DLM_LGA_male_plot
 ```
 
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-1.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_LGA_Males.pdf")
+pdf("Plots/PM25_DLM_LGA_Males.pdf",width=6,height=6)
 DLM_LGA_male_plot
 dev.off()
 
@@ -1294,7 +1294,7 @@ DLM_LGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
   theme_classic()+
   theme(
   axis.title = element_blank())+
-  theme(axis.text=element_text(size=15,  face="bold"))
+  theme(axis.text=element_text(size=24,  face="bold"))
 
 DLM_LGA_female_plot
 ```
@@ -1302,7 +1302,7 @@ DLM_LGA_female_plot
 ![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-2.png)<!-- -->
 
 ``` r
-pdf("Plots/PM25_DLM_LGA_Females.pdf")
+pdf("Plots/PM25_DLM_LGA_Females.pdf",width=6,height=6)
 DLM_LGA_female_plot
 dev.off()
 
