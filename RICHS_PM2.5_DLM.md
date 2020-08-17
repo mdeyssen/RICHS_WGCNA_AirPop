@@ -256,52 +256,7 @@ dev.off()
 ``` r
 pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
 
-summary(model1)
-```
-
-    ## 
-    ## Call:
-    ## glm(formula = F13perc ~ cb1 + factor(Sex) + GestAge + MomAge + 
-    ##     factor(Edu) + factor(Season), family = gaussian, data = Demo)
-    ## 
-    ## Deviance Residuals: 
-    ##     Min       1Q   Median       3Q      Max  
-    ## -72.676  -29.771    4.641   30.796   52.336  
-    ## 
-    ## Coefficients:
-    ##                              Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept)                  97.59617   72.90850   1.339  0.18137   
-    ## cb1v1.l1                     -0.22245    0.11132  -1.998  0.04629 * 
-    ## cb1v1.l2                      0.04783    0.11553   0.414  0.67907   
-    ## factor(Sex)Male               9.45079    3.22079   2.934  0.00351 **
-    ## GestAge                      -0.53045    1.73159  -0.306  0.75949   
-    ## MomAge                        0.38784    0.33421   1.160  0.24647   
-    ## factor(Edu)HS grad            1.98469    4.99069   0.398  0.69105   
-    ## factor(Edu)Less than HS grad -6.29073    7.59594  -0.828  0.40801   
-    ## factor(Edu)Some College       1.28142    4.11099   0.312  0.75541   
-    ## factor(Season)Spring          4.33347    4.43238   0.978  0.32875   
-    ## factor(Season)Summer          2.49278    4.21427   0.592  0.55447   
-    ## factor(Season)Winter         -3.85357    4.67137  -0.825  0.40984   
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## (Dispersion parameter for gaussian family taken to be 1135.893)
-    ## 
-    ##     Null deviance: 540757  on 465  degrees of freedom
-    ## Residual deviance: 515695  on 454  degrees of freedom
-    ##   (5 observations deleted due to missingness)
-    ## AIC: 4614.7
-    ## 
-    ## Number of Fisher Scoring iterations: 2
-
-``` r
 with(pred1, c(allfit,alllow,allhigh))
-```
-
-    ##           5           5           5 
-    ## -23.1365995 -46.7302222   0.4570231
-
-``` r
 #        5         5         5 
 # -23.1365995 -46.7302222   0.4570231
 
@@ -479,52 +434,7 @@ dev.off()
 
 ``` r
 pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
-summary(model1)
-```
-
-    ## 
-    ## Call:
-    ## glm(formula = F13Group ~ cb1 + factor(Sex) + GestAge + MomAge + 
-    ##     factor(Edu) + factor(Season), family = binomial, data = SGA)
-    ## 
-    ## Deviance Residuals: 
-    ##     Min       1Q   Median       3Q      Max  
-    ## -1.1787  -0.7565  -0.6213  -0.4029   2.4782  
-    ## 
-    ## Coefficients:
-    ##                                Estimate Std. Error z value Pr(>|z|)  
-    ## (Intercept)                  -11.133674   6.219318  -1.790   0.0734 .
-    ## cb1v1.l1                       0.017878   0.009973   1.793   0.0730 .
-    ## cb1v1.l2                       0.002499   0.010398   0.240   0.8101  
-    ## factor(Sex)Male               -0.654881   0.279741  -2.341   0.0192 *
-    ## GestAge                        0.147790   0.142163   1.040   0.2985  
-    ## MomAge                         0.005242   0.028831   0.182   0.8557  
-    ## factor(Edu)HS grad             0.375269   0.440878   0.851   0.3947  
-    ## factor(Edu)Less than HS grad  -0.139105   0.616046  -0.226   0.8214  
-    ## factor(Edu)Some College        0.229359   0.351065   0.653   0.5135  
-    ## factor(Season)Spring          -0.515271   0.382156  -1.348   0.1776  
-    ## factor(Season)Summer          -0.188580   0.363488  -0.519   0.6039  
-    ## factor(Season)Winter           0.043715   0.371855   0.118   0.9064  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## (Dispersion parameter for binomial family taken to be 1)
-    ## 
-    ##     Null deviance: 361.19  on 334  degrees of freedom
-    ## Residual deviance: 345.33  on 323  degrees of freedom
-    ##   (2 observations deleted due to missingness)
-    ## AIC: 369.33
-    ## 
-    ## Number of Fisher Scoring iterations: 4
-
-``` r
 with(pred1, c(allRRfit,allRRlow,allRRhigh))
-```
-
-    ##         5         5         5 
-    ##  8.670631  1.395937 53.856171
-
-``` r
 #        5         5         5 
 # 8.670631  1.395937 53.856171 
 
@@ -703,54 +613,7 @@ dev.off()
 
 ``` r
 pred3<- crosspred(cb1,model3,ci.level=0.95, at=5) #at = unit increase
-summary(model3)
-```
-
-    ## 
-    ## Call:
-    ## glm(formula = F13Group ~ cb1 + factor(Sex) + GestAge + MomAge + 
-    ##     factor(Edu) + factor(Season), family = binomial, data = LGA)
-    ## 
-    ## Deviance Residuals: 
-    ##     Min       1Q   Median       3Q      Max  
-    ## -1.4491  -0.9253  -0.7776   1.3121   1.8565  
-    ## 
-    ## Coefficients:
-    ##                               Estimate Std. Error z value Pr(>|z|)  
-    ## (Intercept)                  -1.538949   5.584867  -0.276   0.7829  
-    ## cb1v1.l1                      0.018408   0.015332   1.201   0.2299  
-    ## cb1v1.l2                     -0.095062   0.038541  -2.467   0.0136 *
-    ## cb1v1.l3                      0.069375   0.037081   1.871   0.0614 .
-    ## cb1v1.l4                      0.001023   0.016465   0.062   0.9505  
-    ## factor(Sex)Male               0.017601   0.229314   0.077   0.9388  
-    ## GestAge                       0.014858   0.133034   0.112   0.9111  
-    ## MomAge                        0.015722   0.023946   0.657   0.5115  
-    ## factor(Edu)HS grad            0.375029   0.340370   1.102   0.2705  
-    ## factor(Edu)Less than HS grad -0.702353   0.617465  -1.137   0.2553  
-    ## factor(Edu)Some College      -0.004193   0.285871  -0.015   0.9883  
-    ## factor(Season)Spring          0.691481   0.328008   2.108   0.0350 *
-    ## factor(Season)Summer          0.453954   0.353225   1.285   0.1987  
-    ## factor(Season)Winter          0.102488   0.357184   0.287   0.7742  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## (Dispersion parameter for binomial family taken to be 1)
-    ## 
-    ##     Null deviance: 497.04  on 388  degrees of freedom
-    ## Residual deviance: 481.69  on 375  degrees of freedom
-    ##   (5 observations deleted due to missingness)
-    ## AIC: 509.69
-    ## 
-    ## Number of Fisher Scoring iterations: 4
-
-``` r
 with(pred3, c(allRRfit,allRRlow,allRRhigh))
-```
-
-    ##         5         5         5 
-    ## 0.7515577 0.2036376 2.7737459
-
-``` r
 #        5         5         5 
 # 0.7515577 0.2036376 2.7737459 
 
@@ -888,39 +751,6 @@ mod_F <- list()
       mod_F[[i]] <- glm(F13perc~ cbpmi + +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo_F, family=gaussian) 
   }
-```
-
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-
-``` r
 names(mod_F) <- paste0("MODEL", 1:10)
 #AIC of models
 aic_models_F = lapply(mod_F, AIC)
@@ -935,12 +765,8 @@ sum_models_F$MODEL1 #1 degree of freedom ** lowest AIC
 
 cb1 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=0),
                       arglag=list(fun="bs",degree=1))
-```
 
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
 
-``` r
 model1  <- glm(F13perc~ cb1 + GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo_F, family=gaussian)
 
@@ -967,21 +793,8 @@ predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
 pred1$ci
 
 predpmdt[, range(which(low > 0))]
-```
-
-    ## Warning in min(x): no non-missing arguments to min; returning Inf
-
-    ## Warning in max(x): no non-missing arguments to max; returning -Inf
-
-``` r
 mycibounds <- data.table(x = predpmdt[, range(which(low > 0))] - 1)
-```
 
-    ## Warning in min(x): no non-missing arguments to min; returning Inf
-    
-    ## Warning in min(x): no non-missing arguments to max; returning -Inf
-
-``` r
 DLM_BWperc_plot_Female<-ggplot(predpmdt, aes(x, y)) + 
   geom_ribbon(aes(ymin = low, ymax = high), fill = "grey70") + 
   geom_line(color="black", size=1) + 
@@ -1031,39 +844,6 @@ mod_M <- list()
       mod_M[[i]] <- glm(F13perc~ cbpmi + +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo_M, family=gaussian) 
   }
-```
-
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-    
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
-
-``` r
 names(mod_M) <- paste0("MODEL", 1:10)
 #AIC of models
 aic_models_M = lapply(mod_M, AIC)
@@ -1079,12 +859,8 @@ sum_models_M$MODEL1 #1 degree of freedom ** lowest AIC
 
 cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=0),
                       arglag=list(fun="bs",degree=1))
-```
 
-    ## Warning in checkonebasis(fun, args, cen): centering through 'cen' now applied at
-    ## the prediction stage. See ?crosspred
 
-``` r
 model1  <- glm(F13perc~ cb1 + GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo_M, family=gaussian)
 
@@ -1111,21 +887,8 @@ predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
 pred1$ci
 
 predpmdt[, range(which(low > 0))]
-```
-
-    ## Warning in min(x): no non-missing arguments to min; returning Inf
-
-    ## Warning in max(x): no non-missing arguments to max; returning -Inf
-
-``` r
 mycibounds <- data.table(x = predpmdt[, range(which(low > 0))] - 1)
-```
 
-    ## Warning in min(x): no non-missing arguments to min; returning Inf
-    
-    ## Warning in min(x): no non-missing arguments to max; returning -Inf
-
-``` r
 DLM_BWperc_plot_Male<-
 ggplot(predpmdt, aes(x, y)) + 
   geom_ribbon(aes(ymin = low, ymax = high), fill = "grey70") + 
