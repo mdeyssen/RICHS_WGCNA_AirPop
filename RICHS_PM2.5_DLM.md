@@ -207,13 +207,9 @@ pred1<- crosspred(cb1,model1,ci.level=0.95)
 
 ###### plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
 
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Fenton Percentile",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile",main="Lag-response a 10-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_F13perc-1.png)<!-- -->
 
-``` r
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -247,7 +243,7 @@ DLM_BWperc_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_BWperc_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_F13perc-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_F13perc-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_F13perc.pdf")
@@ -418,7 +414,7 @@ sum_models$MODEL1 #1 degree of freedom ** lowest AIC
     ## 
     ## Number of Fisher Scoring iterations: 4
 
-\#Plot PM2.5 association with odds of SGA status
+## Plot PM2.5 association with odds of SGA status
 
 ``` r
 ###########################    Model 1
@@ -436,13 +432,8 @@ model1  <- glm(F13Group~ cb1 + factor(Sex) +GestAge+MomAge
 pred1<- crosspred(cb1,model1,ci.level=0.95)
 
 ######plot final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Odds of SGA",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA",main="Lag-response a 10-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_SGA-1.png)<!-- -->
-
-``` r
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -476,7 +467,7 @@ SGA_DLM_plot<-ggplot(predpmdt, aes(x, y)) +
 SGA_DLM_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_SGA-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_SGA-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_SGA.pdf")
@@ -484,7 +475,7 @@ SGA_DLM_plot
 dev.off()
 ```
 
-\#Output SGA predicted fit and intervals
+## Output SGA predicted fit and intervals
 
 ``` r
 pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
@@ -547,7 +538,7 @@ prd_all$week<-c(paste0('pre',rev(1:12)),0:40)
 write.csv(prd_all, file = "Data/PM25_DLM_SGA_predfit.csv",row.names=FALSE)
 ```
 
-\#Identify optimal cross-basis parameters based on AIC for LGA subset
+## Identify optimal cross-basis parameters based on AIC for LGA subset
 
 ``` r
 ##This creates a loop so you run models from 1-10 degrees of freedom, you get the AIC from the 10 models and then select the smallest one 
@@ -648,7 +639,7 @@ sum_models$MODEL3 #3 degree of freedom
     ## 
     ## Number of Fisher Scoring iterations: 4
 
-\#Plot PM2.5 association with odds of LGA status
+## Plot PM2.5 association with odds of LGA status
 
 ``` r
 Q2 <- as.matrix(LGA[,18:ncol(LGA)])
@@ -665,13 +656,8 @@ model3  <- glm(F13Group~ cb1 + factor(Sex) +GestAge+MomAge
 pred1<- crosspred(cb1,model3,ci.level=0.95)
 
 ###### plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Odds of LGA",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA",main="Lag-response a 10-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
-
-``` r
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -705,20 +691,15 @@ DLM_LGA_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_LGA_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
 
 ``` r
-("Plots/PM25_DLM_LGA.pdf")
+pdf("Plots/PM25_DLM_LGA.pdf")
 DLM_LGA_plot
-```
-
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-3.png)<!-- -->
-
-``` r
 dev.off()
 ```
 
-\#Output LGA predicted fit and intervals
+## Output LGA predicted fit and intervals
 
 ``` r
 pred3<- crosspred(cb1,model3,ci.level=0.95, at=5) #at = unit increase
@@ -891,7 +872,7 @@ Trimerster_BWperc_plot
 dev.off()
 ```
 
-\#sex-stratified Fenton percentile analysis
+## Sex-stratified Fenton percentile analysis
 
 ``` r
 Demo_F<-Demo%>%filter(Sex=="Female")
@@ -969,13 +950,8 @@ pred1<- crosspred(cb1,model1,ci.level=0.95)
 
 ######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
 
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Fenton Percentile among Females",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Females",main="Lag-response a 10-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-1.png)<!-- -->
-
-``` r
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -1022,7 +998,7 @@ DLM_BWperc_plot_Female<-ggplot(predpmdt, aes(x, y)) +
 DLM_BWperc_plot_Female
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_F13perc_Female.pdf")
@@ -1118,13 +1094,8 @@ pred1<- crosspred(cb1,model1,ci.level=0.95)
 
 ######plot final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
 
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Fenton Percentile among Males",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Males",main="Lag-response a 10-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-3.png)<!-- -->
-
-``` r
 ######## plot final prediction (ggplot)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -1172,7 +1143,7 @@ ggplot(predpmdt, aes(x, y)) +
 DLM_BWperc_plot_Male
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-4.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_F13perc_Male.pdf")
@@ -1196,7 +1167,7 @@ prd_all$week<-c(paste0('pre',rev(1:12)),0:40)
 write.csv(prd_all, file = "Data/PM25_DLM_F13perc_predfit_Male.csv",row.names=FALSE)
 ```
 
-## sex-stratified SGA models
+## Sex-stratified SGA models
 
 ``` r
 SGA_F<-Demo%>%
@@ -1244,13 +1215,7 @@ pred1<- crosspred(cb1,model1,ci.level=0.95)
 
 ######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5
 
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Odds of SGA among females",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
-
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-1.png)<!-- -->
-
-``` r
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA among females",main="Lag-response a 10-unit increase above threshold (95CI)")
 ######## ggplot2
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -1284,7 +1249,7 @@ DLM_SGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_SGA_female_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_SGA_Females.pdf")
@@ -1339,13 +1304,8 @@ model2  <- glm(F13Group~ cb2 + GestAge+MomAge
 pred2<- crosspred(cb2,model2,ci.level=0.95)
 
 ######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5
-plot1<-plot(pred2, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Odds of SGA among males",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
+#plot(pred2, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA among males",main="Lag-response a 10-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-3.png)<!-- -->
-
-``` r
 ######## ggplot2
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -1380,7 +1340,7 @@ ggplot(predpmdt, aes(x, y)) +
 DLM_SGA_male_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-4.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_SGA_sex-2.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_SGA_Males.pdf")
@@ -1403,7 +1363,7 @@ prd_all$week<-c(paste0('pre',rev(1:12)),0:40)
 write.csv(prd_all, file = "Data/PM25_DLM_SGA_Males_predfit.csv",row.names=FALSE)
 ```
 
-\#sex-stratified LGA models
+## Sex-stratified LGA models
 
 ``` r
 LGA_F<-Demo%>%
@@ -1451,13 +1411,7 @@ pred1<- crosspred(cb1,model1,ci.level=0.95)
 
 ######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
 
-plot1<-plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Odds of LGA among males",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
-
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-1.png)<!-- -->
-
-``` r
+#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among males",main="Lag-response a 10-unit increase above threshold (95CI)")
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -1490,7 +1444,7 @@ DLM_LGA_male_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_LGA_male_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_LGA_Males.pdf")
@@ -1548,13 +1502,7 @@ pred3<- crosspred(cb3,model3,ci.level=0.95)
 
 ######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
 
-plot1<-plot(pred3, "slices", var=5, ci="bars", type="p", col=1, pch=19,
-     ci.level=0.95, ylab= "Odds of LGA among females",main="Lag-response a 10-unit increase above threshold (95CI)")
-```
-
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-3.png)<!-- -->
-
-``` r
+#plot(pred3, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among females",main="Lag-response a 10-unit increase above threshold (95CI)")
 ########plot your final prediction  (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -1588,7 +1536,7 @@ DLM_LGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_LGA_female_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-4.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-2.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_LGA_Females.pdf")
