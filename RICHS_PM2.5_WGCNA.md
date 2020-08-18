@@ -146,91 +146,8 @@ myVars <- names(Demo_table)[!names(Demo_table)%in%c('ID')]
 catVars <- c("Sex", "Parity","F13Group", "DM",'Edu','Race','Income','Smoke',"Season","Cohort")
 
 tab <- CreateTableOne(vars = myVars, data = Demo_table, strata = "Cohort",factorVars = catVars,includeNA=T)
-kable(print(tab,showAllLevels = T))
+kableone(print(tab,showAllLevels = T))
 ```
-
-    ##                           Stratified by Cohort
-    ##                            level                  Full           PM            
-    ##   n                                                 799            471         
-    ##   AvgPM25_GREW (mean (SD))                         7.97 (0.79)    7.97 (0.79)  
-    ##   F13perc (mean (SD))                             53.48 (34.48)  58.18 (34.07) 
-    ##   F13Group (%)             SGA                      157 ( 19.6)     77 ( 16.3) 
-    ##                            AGA                      456 ( 57.1)    260 ( 55.2) 
-    ##                            LGA                      186 ( 23.3)    134 ( 28.5) 
-    ##   GestAge (mean (SD))                             39.00 (0.95)   38.99 (0.92)  
-    ##   Sex (%)                  Female                   401 ( 50.2)    227 ( 48.2) 
-    ##                            Male                     398 ( 49.8)    244 ( 51.8) 
-    ##   DM (%)                   C-Section                408 ( 51.1)    250 ( 53.1) 
-    ##                            Vaginal                  391 ( 48.9)    221 ( 46.9) 
-    ##   Parity (%)               Nulliparous              326 ( 40.8)    188 ( 39.9) 
-    ##                            Parous                   467 ( 58.4)    281 ( 59.7) 
-    ##                            <NA>                       6 (  0.8)      2 (  0.4) 
-    ##   MomAge (mean (SD))                              29.72 (5.47)   30.03 (5.65)  
-    ##   Race (%)                 Black                     60 (  7.5)     28 (  5.9) 
-    ##                            Other                    151 ( 18.9)     81 ( 17.2) 
-    ##                            White                    585 ( 73.2)    361 ( 76.6) 
-    ##                            <NA>                       3 (  0.4)      1 (  0.2) 
-    ##   Edu (%)                  College grad and above   400 ( 50.1)    249 ( 52.9) 
-    ##                            HS grad                  144 ( 18.0)     76 ( 16.1) 
-    ##                            Less than HS grad         60 (  7.5)     26 (  5.5) 
-    ##                            Some College             188 ( 23.5)    115 ( 24.4) 
-    ##                            <NA>                       7 (  0.9)      5 (  1.1) 
-    ##   Income (%)               <30K                     204 ( 25.5)    117 ( 24.8) 
-    ##                            30-79K                   224 ( 28.0)    137 ( 29.1) 
-    ##                            80K+                     289 ( 36.2)    172 ( 36.5) 
-    ##                            <NA>                      82 ( 10.3)     45 (  9.6) 
-    ##   Smoke (%)                No                       746 ( 93.4)    441 ( 93.6) 
-    ##                            Yes                       42 (  5.3)     23 (  4.9) 
-    ##                            <NA>                      11 (  1.4)      7 (  1.5) 
-    ##   BMI (mean (SD))                                 26.60 (7.00)   26.94 (7.10)  
-    ##   Season (%)               Fall                     171 ( 21.4)    136 ( 28.9) 
-    ##                            Spring                   216 ( 27.0)    111 ( 23.6) 
-    ##                            Summer                   261 ( 32.7)    137 ( 29.1) 
-    ##                            Winter                   151 ( 18.9)     87 ( 18.5) 
-    ##   Cohort (%)               Full                     799 (100.0)      0 (  0.0) 
-    ##                            PM                         0 (  0.0)    471 (100.0) 
-    ##                            Subset                     0 (  0.0)      0 (  0.0) 
-    ##                           Stratified by Cohort
-    ##                            Subset         p      test
-    ##   n                          149                     
-    ##   AvgPM25_GREW (mean (SD))  7.99 (0.74)    0.943     
-    ##   F13perc (mean (SD))      56.93 (34.14)   0.053     
-    ##   F13Group (%)                22 ( 14.8)   0.117     
-    ##                               82 ( 55.0)             
-    ##                               45 ( 30.2)             
-    ##   GestAge (mean (SD))      38.95 (0.96)    0.865     
-    ##   Sex (%)                     71 ( 47.7)   0.725     
-    ##                               78 ( 52.3)             
-    ##   DM (%)                      67 ( 45.0)   0.225     
-    ##                               82 ( 55.0)             
-    ##   Parity (%)                  53 ( 35.6)   0.538     
-    ##                               96 ( 64.4)             
-    ##                                0 (  0.0)             
-    ##   MomAge (mean (SD))       31.23 (4.78)    0.008     
-    ##   Race (%)                     7 (  4.7)   0.502     
-    ##                               22 ( 14.8)             
-    ##                              120 ( 80.5)             
-    ##                                0 (  0.0)             
-    ##   Edu (%)                     91 ( 61.1)   0.194     
-    ##                               17 ( 11.4)             
-    ##                                5 (  3.4)             
-    ##                               34 ( 22.8)             
-    ##                                2 (  1.3)             
-    ##   Income (%)                  25 ( 16.8)   0.130     
-    ##                               38 ( 25.5)             
-    ##                               72 ( 48.3)             
-    ##                               14 (  9.4)             
-    ##   Smoke (%)                  142 ( 95.3)   0.377     
-    ##                                3 (  2.0)             
-    ##                                4 (  2.7)             
-    ##   BMI (mean (SD))          26.25 (6.28)    0.525     
-    ##   Season (%)                  42 ( 28.2)   0.025     
-    ##                               29 ( 19.5)             
-    ##                               55 ( 36.9)             
-    ##                               23 ( 15.4)             
-    ##   Cohort (%)                   0 (  0.0)  <0.001     
-    ##                                0 (  0.0)             
-    ##                              149 (100.0)
 
 |                           | level                  | Full          | PM            | Subset        | p       | test |
 | ------------------------- | :--------------------- | :------------ | :------------ | :------------ | :------ | :--- |
@@ -282,83 +199,8 @@ write.csv(tabMat, file = "Tables/PM25(GREW)_Full.vs.subset_cohort_table.csv")
 myVars <- names(Demo_table_subset)[!names(Demo_table_subset)%in%c('ID')]
 catVars <- c("Sex", "Parity","F13Group", "DM",'Edu','Race','Income','Smoke',"Season")
 tab <- CreateTableOne(vars = myVars, data = Demo_table_subset, strata = "F13Group",factorVars = catVars,includeNA=T)
-kable(print(tab,showAllLevels = T))
+kableone(print(tab,showAllLevels = T))
 ```
-
-    ##                           Stratified by F13Group
-    ##                            level                  SGA            AGA           
-    ##   n                                                  22             82         
-    ##   AvgPM25_GREW (mean (SD))                         8.18 (0.66)    8.04 (0.73)  
-    ##   F13perc (mean (SD))                              4.77 (3.04)   50.11 (23.19) 
-    ##   F13Group (%)             SGA                       22 (100.0)      0 (  0.0) 
-    ##                            AGA                        0 (  0.0)     82 (100.0) 
-    ##                            LGA                        0 (  0.0)      0 (  0.0) 
-    ##   GestAge (mean (SD))                             38.86 (1.25)   38.98 (0.98)  
-    ##   Sex (%)                  Female                    13 ( 59.1)     41 ( 50.0) 
-    ##                            Male                       9 ( 40.9)     41 ( 50.0) 
-    ##   DM (%)                   C-Section                  9 ( 40.9)     30 ( 36.6) 
-    ##                            Vaginal                   13 ( 59.1)     52 ( 63.4) 
-    ##   Parity (%)               Nulliparous               11 ( 50.0)     35 ( 42.7) 
-    ##                            Parous                    11 ( 50.0)     47 ( 57.3) 
-    ##   MomAge (mean (SD))                              31.95 (6.14)   30.98 (4.70)  
-    ##   Race (%)                 Black                      3 ( 13.6)      2 (  2.4) 
-    ##                            Other                      5 ( 22.7)     13 ( 15.9) 
-    ##                            White                     14 ( 63.6)     67 ( 81.7) 
-    ##   Edu (%)                  College grad and above    14 ( 63.6)     51 ( 62.2) 
-    ##                            HS grad                    4 ( 18.2)     10 ( 12.2) 
-    ##                            Less than HS grad          1 (  4.5)      3 (  3.7) 
-    ##                            Some College               3 ( 13.6)     18 ( 22.0) 
-    ##                            <NA>                       0 (  0.0)      0 (  0.0) 
-    ##   Income (%)               <30K                       5 ( 22.7)     10 ( 12.2) 
-    ##                            30-79K                     6 ( 27.3)     18 ( 22.0) 
-    ##                            80K+                       8 ( 36.4)     48 ( 58.5) 
-    ##                            <NA>                       3 ( 13.6)      6 (  7.3) 
-    ##   Smoke (%)                No                        19 ( 86.4)     79 ( 96.3) 
-    ##                            Yes                        1 (  4.5)      1 (  1.2) 
-    ##                            <NA>                       2 (  9.1)      2 (  2.4) 
-    ##   BMI (mean (SD))                                 25.19 (7.19)   25.44 (5.54)  
-    ##   Season (%)               Fall                       6 ( 27.3)     26 ( 31.7) 
-    ##                            Spring                     3 ( 13.6)     16 ( 19.5) 
-    ##                            Summer                     8 ( 36.4)     27 ( 32.9) 
-    ##                            Winter                     5 ( 22.7)     13 ( 15.9) 
-    ##   Cohort (%)               Subset                    22 (100.0)     82 (100.0) 
-    ##                           Stratified by F13Group
-    ##                            LGA            p      test
-    ##   n                           45                     
-    ##   AvgPM25_GREW (mean (SD))  7.81 (0.78)    0.098     
-    ##   F13perc (mean (SD))      94.86 (2.70)   <0.001     
-    ##   F13Group (%)                 0 (  0.0)  <0.001     
-    ##                                0 (  0.0)             
-    ##                               45 (100.0)             
-    ##   GestAge (mean (SD))      38.96 (0.77)    0.890     
-    ##   Sex (%)                     17 ( 37.8)   0.213     
-    ##                               28 ( 62.2)             
-    ##   DM (%)                      28 ( 62.2)   0.019     
-    ##                               17 ( 37.8)             
-    ##   Parity (%)                   7 ( 15.6)   0.003     
-    ##                               38 ( 84.4)             
-    ##   MomAge (mean (SD))       31.36 (4.21)    0.684     
-    ##   Race (%)                     2 (  4.4)   0.103     
-    ##                                4 (  8.9)             
-    ##                               39 ( 86.7)             
-    ##   Edu (%)                     26 ( 57.8)   0.394     
-    ##                                3 (  6.7)             
-    ##                                1 (  2.2)             
-    ##                               13 ( 28.9)             
-    ##                                2 (  4.4)             
-    ##   Income (%)                  10 ( 22.2)   0.227     
-    ##                               14 ( 31.1)             
-    ##                               16 ( 35.6)             
-    ##                                5 ( 11.1)             
-    ##   Smoke (%)                   44 ( 97.8)   0.216     
-    ##                                1 (  2.2)             
-    ##                                0 (  0.0)             
-    ##   BMI (mean (SD))          28.33 (6.76)    0.034     
-    ##   Season (%)                  10 ( 22.2)   0.697     
-    ##                               10 ( 22.2)             
-    ##                               20 ( 44.4)             
-    ##                                5 ( 11.1)             
-    ##   Cohort (%)                  45 (100.0)   NA
 
 |                           | level                  | SGA          | AGA           | LGA          | p       | test |
 | ------------------------- | :--------------------- | :----------- | :------------ | :----------- | :------ | :--- |
@@ -408,87 +250,8 @@ write.csv(tabMat, file = "Tables/PM25(GREW)_subset_BW_table.csv")
 myVars <- names(Demo_table_full)[!names(Demo_table_full)%in%c('ID')]
 catVars <- c("Sex", "Parity","F13Group", "DM",'Edu','Race','Income','Smoke',"Season")
 tab <- CreateTableOne(vars = myVars, data = Demo_table_full, strata = "F13Group",factorVars = catVars,includeNA=T)
-kable(print(tab,showAllLevels = T))
+kableone(print(tab,showAllLevels = T))
 ```
-
-    ##                           Stratified by F13Group
-    ##                            level                  SGA            AGA           
-    ##   n                                                 157            456         
-    ##   AvgPM25_GREW (mean (SD))                         8.19 (0.75)    7.96 (0.81)  
-    ##   F13perc (mean (SD))                              5.13 (3.18)   53.13 (23.68) 
-    ##   F13Group (%)             SGA                      157 (100.0)      0 (  0.0) 
-    ##                            AGA                        0 (  0.0)    456 (100.0) 
-    ##                            LGA                        0 (  0.0)      0 (  0.0) 
-    ##   GestAge (mean (SD))                             39.04 (1.12)   38.99 (0.94)  
-    ##   Sex (%)                  Female                    93 ( 59.2)    220 ( 48.2) 
-    ##                            Male                      64 ( 40.8)    236 ( 51.8) 
-    ##   DM (%)                   C-Section                 63 ( 40.1)    206 ( 45.2) 
-    ##                            Vaginal                   94 ( 59.9)    250 ( 54.8) 
-    ##   Parity (%)               Nulliparous               86 ( 54.8)    184 ( 40.4) 
-    ##                            Parous                    68 ( 43.3)    270 ( 59.2) 
-    ##                            <NA>                       3 (  1.9)      2 (  0.4) 
-    ##   MomAge (mean (SD))                              28.39 (6.07)   29.83 (5.34)  
-    ##   Race (%)                 Black                     24 ( 15.3)     25 (  5.5) 
-    ##                            Other                     44 ( 28.0)     85 ( 18.6) 
-    ##                            White                     89 ( 56.7)    344 ( 75.4) 
-    ##                            <NA>                       0 (  0.0)      2 (  0.4) 
-    ##   Edu (%)                  College grad and above    62 ( 39.5)    235 ( 51.5) 
-    ##                            HS grad                   33 ( 21.0)     75 ( 16.4) 
-    ##                            Less than HS grad         15 (  9.6)     39 (  8.6) 
-    ##                            Some College              46 ( 29.3)    104 ( 22.8) 
-    ##                            <NA>                       1 (  0.6)      3 (  0.7) 
-    ##   Income (%)               <30K                      53 ( 33.8)    110 ( 24.1) 
-    ##                            30-79K                    40 ( 25.5)    121 ( 26.5) 
-    ##                            80K+                      40 ( 25.5)    184 ( 40.4) 
-    ##                            <NA>                      24 ( 15.3)     41 (  9.0) 
-    ##   Smoke (%)                No                       132 ( 84.1)    432 ( 94.7) 
-    ##                            Yes                       20 ( 12.7)     18 (  3.9) 
-    ##                            <NA>                       5 (  3.2)      6 (  1.3) 
-    ##   BMI (mean (SD))                                 25.08 (6.77)   26.19 (6.65)  
-    ##   Season (%)               Fall                      37 ( 23.6)     96 ( 21.1) 
-    ##                            Spring                    41 ( 26.1)    121 ( 26.5) 
-    ##                            Summer                    44 ( 28.0)    155 ( 34.0) 
-    ##                            Winter                    35 ( 22.3)     84 ( 18.4) 
-    ##   Cohort (%)               Full                     157 (100.0)    456 (100.0) 
-    ##                           Stratified by F13Group
-    ##                            LGA            p      test
-    ##   n                          186                     
-    ##   AvgPM25_GREW (mean (SD))  7.86 (0.76)    0.014     
-    ##   F13perc (mean (SD))      95.17 (2.89)   <0.001     
-    ##   F13Group (%)                 0 (  0.0)  <0.001     
-    ##                                0 (  0.0)             
-    ##                              186 (100.0)             
-    ##   GestAge (mean (SD))      38.98 (0.79)    0.794     
-    ##   Sex (%)                     88 ( 47.3)   0.040     
-    ##                               98 ( 52.7)             
-    ##   DM (%)                     139 ( 74.7)  <0.001     
-    ##                               47 ( 25.3)             
-    ##   Parity (%)                  56 ( 30.1)  <0.001     
-    ##                              129 ( 69.4)             
-    ##                                1 (  0.5)             
-    ##   MomAge (mean (SD))       30.58 (5.06)    0.001     
-    ##   Race (%)                    11 (  5.9)  <0.001     
-    ##                               22 ( 11.8)             
-    ##                              152 ( 81.7)             
-    ##                                1 (  0.5)             
-    ##   Edu (%)                    103 ( 55.4)   0.030     
-    ##                               36 ( 19.4)             
-    ##                                6 (  3.2)             
-    ##                               38 ( 20.4)             
-    ##                                3 (  1.6)             
-    ##   Income (%)                  41 ( 22.0)   0.002     
-    ##                               63 ( 33.9)             
-    ##                               65 ( 34.9)             
-    ##                               17 (  9.1)             
-    ##   Smoke (%)                  182 ( 97.8)  <0.001     
-    ##                                4 (  2.2)             
-    ##                                0 (  0.0)             
-    ##   BMI (mean (SD))          28.90 (7.51)   <0.001     
-    ##   Season (%)                  38 ( 20.4)   0.755     
-    ##                               54 ( 29.0)             
-    ##                               62 ( 33.3)             
-    ##                               32 ( 17.2)             
-    ##   Cohort (%)                 186 (100.0)   NA
 
 |                           | level                  | SGA          | AGA           | LGA          | p       | test |
 | ------------------------- | :--------------------- | :----------- | :------------ | :----------- | :------ | :--- |
