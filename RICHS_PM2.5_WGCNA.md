@@ -36,6 +36,7 @@ library(tableone)
 library(tidyverse)
 library(broom)
 library(corrplot)
+library(knitr)
 ```
 
 ## Load data
@@ -145,7 +146,7 @@ myVars <- names(Demo_table)[!names(Demo_table)%in%c('ID')]
 catVars <- c("Sex", "Parity","F13Group", "DM",'Edu','Race','Income','Smoke',"Season","Cohort")
 
 tab <- CreateTableOne(vars = myVars, data = Demo_table, strata = "Cohort",factorVars = catVars,includeNA=T)
-print(tab,showAllLevels = T)
+kable(print(tab,showAllLevels = T))
 ```
 
     ##                           Stratified by Cohort
@@ -231,6 +232,48 @@ print(tab,showAllLevels = T)
     ##                                0 (  0.0)             
     ##                              149 (100.0)
 
+|                           | level                  | Full          | PM            | Subset        | p       | test |
+| ------------------------- | :--------------------- | :------------ | :------------ | :------------ | :------ | :--- |
+| n                         |                        | 799           | 471           | 149           |         |      |
+| AvgPM25\_GREW (mean (SD)) |                        | 7.97 (0.79)   | 7.97 (0.79)   | 7.99 (0.74)   | 0.943   |      |
+| F13perc (mean (SD))       |                        | 53.48 (34.48) | 58.18 (34.07) | 56.93 (34.14) | 0.053   |      |
+| F13Group (%)              | SGA                    | 157 ( 19.6)   | 77 ( 16.3)    | 22 ( 14.8)    | 0.117   |      |
+|                           | AGA                    | 456 ( 57.1)   | 260 ( 55.2)   | 82 ( 55.0)    |         |      |
+|                           | LGA                    | 186 ( 23.3)   | 134 ( 28.5)   | 45 ( 30.2)    |         |      |
+| GestAge (mean (SD))       |                        | 39.00 (0.95)  | 38.99 (0.92)  | 38.95 (0.96)  | 0.865   |      |
+| Sex (%)                   | Female                 | 401 ( 50.2)   | 227 ( 48.2)   | 71 ( 47.7)    | 0.725   |      |
+|                           | Male                   | 398 ( 49.8)   | 244 ( 51.8)   | 78 ( 52.3)    |         |      |
+| DM (%)                    | C-Section              | 408 ( 51.1)   | 250 ( 53.1)   | 67 ( 45.0)    | 0.225   |      |
+|                           | Vaginal                | 391 ( 48.9)   | 221 ( 46.9)   | 82 ( 55.0)    |         |      |
+| Parity (%)                | Nulliparous            | 326 ( 40.8)   | 188 ( 39.9)   | 53 ( 35.6)    | 0.538   |      |
+|                           | Parous                 | 467 ( 58.4)   | 281 ( 59.7)   | 96 ( 64.4)    |         |      |
+|                           | NA                     | 6 ( 0.8)      | 2 ( 0.4)      | 0 ( 0.0)      |         |      |
+| MomAge (mean (SD))        |                        | 29.72 (5.47)  | 30.03 (5.65)  | 31.23 (4.78)  | 0.008   |      |
+| Race (%)                  | Black                  | 60 ( 7.5)     | 28 ( 5.9)     | 7 ( 4.7)      | 0.502   |      |
+|                           | Other                  | 151 ( 18.9)   | 81 ( 17.2)    | 22 ( 14.8)    |         |      |
+|                           | White                  | 585 ( 73.2)   | 361 ( 76.6)   | 120 ( 80.5)   |         |      |
+|                           | NA                     | 3 ( 0.4)      | 1 ( 0.2)      | 0 ( 0.0)      |         |      |
+| Edu (%)                   | College grad and above | 400 ( 50.1)   | 249 ( 52.9)   | 91 ( 61.1)    | 0.194   |      |
+|                           | HS grad                | 144 ( 18.0)   | 76 ( 16.1)    | 17 ( 11.4)    |         |      |
+|                           | Less than HS grad      | 60 ( 7.5)     | 26 ( 5.5)     | 5 ( 3.4)      |         |      |
+|                           | Some College           | 188 ( 23.5)   | 115 ( 24.4)   | 34 ( 22.8)    |         |      |
+|                           | NA                     | 7 ( 0.9)      | 5 ( 1.1)      | 2 ( 1.3)      |         |      |
+| Income (%)                | \<30K                  | 204 ( 25.5)   | 117 ( 24.8)   | 25 ( 16.8)    | 0.130   |      |
+|                           | 30-79K                 | 224 ( 28.0)   | 137 ( 29.1)   | 38 ( 25.5)    |         |      |
+|                           | 80K+                   | 289 ( 36.2)   | 172 ( 36.5)   | 72 ( 48.3)    |         |      |
+|                           | NA                     | 82 ( 10.3)    | 45 ( 9.6)     | 14 ( 9.4)     |         |      |
+| Smoke (%)                 | No                     | 746 ( 93.4)   | 441 ( 93.6)   | 142 ( 95.3)   | 0.377   |      |
+|                           | Yes                    | 42 ( 5.3)     | 23 ( 4.9)     | 3 ( 2.0)      |         |      |
+|                           | NA                     | 11 ( 1.4)     | 7 ( 1.5)      | 4 ( 2.7)      |         |      |
+| BMI (mean (SD))           |                        | 26.60 (7.00)  | 26.94 (7.10)  | 26.25 (6.28)  | 0.525   |      |
+| Season (%)                | Fall                   | 171 ( 21.4)   | 136 ( 28.9)   | 42 ( 28.2)    | 0.025   |      |
+|                           | Spring                 | 216 ( 27.0)   | 111 ( 23.6)   | 29 ( 19.5)    |         |      |
+|                           | Summer                 | 261 ( 32.7)   | 137 ( 29.1)   | 55 ( 36.9)    |         |      |
+|                           | Winter                 | 151 ( 18.9)   | 87 ( 18.5)    | 23 ( 15.4)    |         |      |
+| Cohort (%)                | Full                   | 799 (100.0)   | 0 ( 0.0)      | 0 ( 0.0)      | \<0.001 |      |
+|                           | PM                     | 0 ( 0.0)      | 471 (100.0)   | 0 ( 0.0)      |         |      |
+|                           | Subset                 | 0 ( 0.0)      | 0 ( 0.0)      | 149 (100.0)   |         |      |
+
 ``` r
 tabMat <- print(tab,quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
 write.csv(tabMat, file = "Tables/PM25(GREW)_Full.vs.subset_cohort_table.csv")
@@ -239,7 +282,7 @@ write.csv(tabMat, file = "Tables/PM25(GREW)_Full.vs.subset_cohort_table.csv")
 myVars <- names(Demo_table_subset)[!names(Demo_table_subset)%in%c('ID')]
 catVars <- c("Sex", "Parity","F13Group", "DM",'Edu','Race','Income','Smoke',"Season")
 tab <- CreateTableOne(vars = myVars, data = Demo_table_subset, strata = "F13Group",factorVars = catVars,includeNA=T)
-print(tab,showAllLevels = T)
+kable(print(tab,showAllLevels = T))
 ```
 
     ##                           Stratified by F13Group
@@ -317,6 +360,44 @@ print(tab,showAllLevels = T)
     ##                                5 ( 11.1)             
     ##   Cohort (%)                  45 (100.0)   NA
 
+|                           | level                  | SGA          | AGA           | LGA          | p       | test |
+| ------------------------- | :--------------------- | :----------- | :------------ | :----------- | :------ | :--- |
+| n                         |                        | 22           | 82            | 45           |         |      |
+| AvgPM25\_GREW (mean (SD)) |                        | 8.18 (0.66)  | 8.04 (0.73)   | 7.81 (0.78)  | 0.098   |      |
+| F13perc (mean (SD))       |                        | 4.77 (3.04)  | 50.11 (23.19) | 94.86 (2.70) | \<0.001 |      |
+| F13Group (%)              | SGA                    | 22 (100.0)   | 0 ( 0.0)      | 0 ( 0.0)     | \<0.001 |      |
+|                           | AGA                    | 0 ( 0.0)     | 82 (100.0)    | 0 ( 0.0)     |         |      |
+|                           | LGA                    | 0 ( 0.0)     | 0 ( 0.0)      | 45 (100.0)   |         |      |
+| GestAge (mean (SD))       |                        | 38.86 (1.25) | 38.98 (0.98)  | 38.96 (0.77) | 0.890   |      |
+| Sex (%)                   | Female                 | 13 ( 59.1)   | 41 ( 50.0)    | 17 ( 37.8)   | 0.213   |      |
+|                           | Male                   | 9 ( 40.9)    | 41 ( 50.0)    | 28 ( 62.2)   |         |      |
+| DM (%)                    | C-Section              | 9 ( 40.9)    | 30 ( 36.6)    | 28 ( 62.2)   | 0.019   |      |
+|                           | Vaginal                | 13 ( 59.1)   | 52 ( 63.4)    | 17 ( 37.8)   |         |      |
+| Parity (%)                | Nulliparous            | 11 ( 50.0)   | 35 ( 42.7)    | 7 ( 15.6)    | 0.003   |      |
+|                           | Parous                 | 11 ( 50.0)   | 47 ( 57.3)    | 38 ( 84.4)   |         |      |
+| MomAge (mean (SD))        |                        | 31.95 (6.14) | 30.98 (4.70)  | 31.36 (4.21) | 0.684   |      |
+| Race (%)                  | Black                  | 3 ( 13.6)    | 2 ( 2.4)      | 2 ( 4.4)     | 0.103   |      |
+|                           | Other                  | 5 ( 22.7)    | 13 ( 15.9)    | 4 ( 8.9)     |         |      |
+|                           | White                  | 14 ( 63.6)   | 67 ( 81.7)    | 39 ( 86.7)   |         |      |
+| Edu (%)                   | College grad and above | 14 ( 63.6)   | 51 ( 62.2)    | 26 ( 57.8)   | 0.394   |      |
+|                           | HS grad                | 4 ( 18.2)    | 10 ( 12.2)    | 3 ( 6.7)     |         |      |
+|                           | Less than HS grad      | 1 ( 4.5)     | 3 ( 3.7)      | 1 ( 2.2)     |         |      |
+|                           | Some College           | 3 ( 13.6)    | 18 ( 22.0)    | 13 ( 28.9)   |         |      |
+|                           | NA                     | 0 ( 0.0)     | 0 ( 0.0)      | 2 ( 4.4)     |         |      |
+| Income (%)                | \<30K                  | 5 ( 22.7)    | 10 ( 12.2)    | 10 ( 22.2)   | 0.227   |      |
+|                           | 30-79K                 | 6 ( 27.3)    | 18 ( 22.0)    | 14 ( 31.1)   |         |      |
+|                           | 80K+                   | 8 ( 36.4)    | 48 ( 58.5)    | 16 ( 35.6)   |         |      |
+|                           | NA                     | 3 ( 13.6)    | 6 ( 7.3)      | 5 ( 11.1)    |         |      |
+| Smoke (%)                 | No                     | 19 ( 86.4)   | 79 ( 96.3)    | 44 ( 97.8)   | 0.216   |      |
+|                           | Yes                    | 1 ( 4.5)     | 1 ( 1.2)      | 1 ( 2.2)     |         |      |
+|                           | NA                     | 2 ( 9.1)     | 2 ( 2.4)      | 0 ( 0.0)     |         |      |
+| BMI (mean (SD))           |                        | 25.19 (7.19) | 25.44 (5.54)  | 28.33 (6.76) | 0.034   |      |
+| Season (%)                | Fall                   | 6 ( 27.3)    | 26 ( 31.7)    | 10 ( 22.2)   | 0.697   |      |
+|                           | Spring                 | 3 ( 13.6)    | 16 ( 19.5)    | 10 ( 22.2)   |         |      |
+|                           | Summer                 | 8 ( 36.4)    | 27 ( 32.9)    | 20 ( 44.4)   |         |      |
+|                           | Winter                 | 5 ( 22.7)    | 13 ( 15.9)    | 5 ( 11.1)    |         |      |
+| Cohort (%)                | Subset                 | 22 (100.0)   | 82 (100.0)    | 45 (100.0)   | NA      |      |
+
 ``` r
 tabMat <- print(tab,quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
 
@@ -327,7 +408,7 @@ write.csv(tabMat, file = "Tables/PM25(GREW)_subset_BW_table.csv")
 myVars <- names(Demo_table_full)[!names(Demo_table_full)%in%c('ID')]
 catVars <- c("Sex", "Parity","F13Group", "DM",'Edu','Race','Income','Smoke',"Season")
 tab <- CreateTableOne(vars = myVars, data = Demo_table_full, strata = "F13Group",factorVars = catVars,includeNA=T)
-print(tab,showAllLevels = T)
+kable(print(tab,showAllLevels = T))
 ```
 
     ##                           Stratified by F13Group
@@ -408,6 +489,46 @@ print(tab,showAllLevels = T)
     ##                               62 ( 33.3)             
     ##                               32 ( 17.2)             
     ##   Cohort (%)                 186 (100.0)   NA
+
+|                           | level                  | SGA          | AGA           | LGA          | p       | test |
+| ------------------------- | :--------------------- | :----------- | :------------ | :----------- | :------ | :--- |
+| n                         |                        | 157          | 456           | 186          |         |      |
+| AvgPM25\_GREW (mean (SD)) |                        | 8.19 (0.75)  | 7.96 (0.81)   | 7.86 (0.76)  | 0.014   |      |
+| F13perc (mean (SD))       |                        | 5.13 (3.18)  | 53.13 (23.68) | 95.17 (2.89) | \<0.001 |      |
+| F13Group (%)              | SGA                    | 157 (100.0)  | 0 ( 0.0)      | 0 ( 0.0)     | \<0.001 |      |
+|                           | AGA                    | 0 ( 0.0)     | 456 (100.0)   | 0 ( 0.0)     |         |      |
+|                           | LGA                    | 0 ( 0.0)     | 0 ( 0.0)      | 186 (100.0)  |         |      |
+| GestAge (mean (SD))       |                        | 39.04 (1.12) | 38.99 (0.94)  | 38.98 (0.79) | 0.794   |      |
+| Sex (%)                   | Female                 | 93 ( 59.2)   | 220 ( 48.2)   | 88 ( 47.3)   | 0.040   |      |
+|                           | Male                   | 64 ( 40.8)   | 236 ( 51.8)   | 98 ( 52.7)   |         |      |
+| DM (%)                    | C-Section              | 63 ( 40.1)   | 206 ( 45.2)   | 139 ( 74.7)  | \<0.001 |      |
+|                           | Vaginal                | 94 ( 59.9)   | 250 ( 54.8)   | 47 ( 25.3)   |         |      |
+| Parity (%)                | Nulliparous            | 86 ( 54.8)   | 184 ( 40.4)   | 56 ( 30.1)   | \<0.001 |      |
+|                           | Parous                 | 68 ( 43.3)   | 270 ( 59.2)   | 129 ( 69.4)  |         |      |
+|                           | NA                     | 3 ( 1.9)     | 2 ( 0.4)      | 1 ( 0.5)     |         |      |
+| MomAge (mean (SD))        |                        | 28.39 (6.07) | 29.83 (5.34)  | 30.58 (5.06) | 0.001   |      |
+| Race (%)                  | Black                  | 24 ( 15.3)   | 25 ( 5.5)     | 11 ( 5.9)    | \<0.001 |      |
+|                           | Other                  | 44 ( 28.0)   | 85 ( 18.6)    | 22 ( 11.8)   |         |      |
+|                           | White                  | 89 ( 56.7)   | 344 ( 75.4)   | 152 ( 81.7)  |         |      |
+|                           | NA                     | 0 ( 0.0)     | 2 ( 0.4)      | 1 ( 0.5)     |         |      |
+| Edu (%)                   | College grad and above | 62 ( 39.5)   | 235 ( 51.5)   | 103 ( 55.4)  | 0.030   |      |
+|                           | HS grad                | 33 ( 21.0)   | 75 ( 16.4)    | 36 ( 19.4)   |         |      |
+|                           | Less than HS grad      | 15 ( 9.6)    | 39 ( 8.6)     | 6 ( 3.2)     |         |      |
+|                           | Some College           | 46 ( 29.3)   | 104 ( 22.8)   | 38 ( 20.4)   |         |      |
+|                           | NA                     | 1 ( 0.6)     | 3 ( 0.7)      | 3 ( 1.6)     |         |      |
+| Income (%)                | \<30K                  | 53 ( 33.8)   | 110 ( 24.1)   | 41 ( 22.0)   | 0.002   |      |
+|                           | 30-79K                 | 40 ( 25.5)   | 121 ( 26.5)   | 63 ( 33.9)   |         |      |
+|                           | 80K+                   | 40 ( 25.5)   | 184 ( 40.4)   | 65 ( 34.9)   |         |      |
+|                           | NA                     | 24 ( 15.3)   | 41 ( 9.0)     | 17 ( 9.1)    |         |      |
+| Smoke (%)                 | No                     | 132 ( 84.1)  | 432 ( 94.7)   | 182 ( 97.8)  | \<0.001 |      |
+|                           | Yes                    | 20 ( 12.7)   | 18 ( 3.9)     | 4 ( 2.2)     |         |      |
+|                           | NA                     | 5 ( 3.2)     | 6 ( 1.3)      | 0 ( 0.0)     |         |      |
+| BMI (mean (SD))           |                        | 25.08 (6.77) | 26.19 (6.65)  | 28.90 (7.51) | \<0.001 |      |
+| Season (%)                | Fall                   | 37 ( 23.6)   | 96 ( 21.1)    | 38 ( 20.4)   | 0.755   |      |
+|                           | Spring                 | 41 ( 26.1)   | 121 ( 26.5)   | 54 ( 29.0)   |         |      |
+|                           | Summer                 | 44 ( 28.0)   | 155 ( 34.0)   | 62 ( 33.3)   |         |      |
+|                           | Winter                 | 35 ( 22.3)   | 84 ( 18.4)    | 32 ( 17.2)   |         |      |
+| Cohort (%)                | Full                   | 157 (100.0)  | 456 (100.0)   | 186 (100.0)  | NA      |      |
 
 ``` r
 tabMat <- print(tab,quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
@@ -640,17 +761,17 @@ textMatrix2 <-ifelse(modTraitP<0.05,paste(signif(modTraitCor,2)), NA)
 #textMatrix = paste(signif(modTraitCor, 2), "\n(", signif(modTraitP, 1), ")", sep = "") 
 dim(textMatrix2) = dim(modTraitCor) 
 
-
-WGCNA_heatmap<-labeledHeatmap(Matrix = modTraitCor, xLabels = names(Demo_ME), yLabels = names(MEs0), ySymbols = names(MEs0), colorLabels =FALSE,colors= blueWhiteRed (50),textMatrix=textMatrix2, setStdMargins = FALSE, cex.text = 0.8, zlim = c(-1,1))
+par(mar = c(8,10, 3, 3))
+labeledHeatmap(Matrix = modTraitCor, xLabels = names(Demo_ME), yLabels = names(MEs0),ySymbols=gsub('ME','',names(MEs0)),
+colors= blueWhiteRed (50),textMatrix=textMatrix2, setStdMargins = FALSE, cex.text = 1.0, cex.lab=1.2,zlim = c(-1,1))
 ```
 
 ![](RICHS_PM2.5_WGCNA_files/figure-gfm/WGCNA_corr-1.png)<!-- -->
 
 ``` r
-WGCNA_heatmap
-
 pdf("Plots/PM25_corr_ME_WGCNA.pdf",width=8.5,height=6)
 par(mar = c(8,10, 3, 3))
-WGCNA_heatmap
+labeledHeatmap(Matrix = modTraitCor, xLabels = names(Demo_ME), yLabels = names(MEs0),ySymbols=gsub('ME','',names(MEs0)),
+colors= blueWhiteRed (50),textMatrix=textMatrix2, setStdMargins = FALSE, cex.text = 1.0, cex.lab=1.2,zlim = c(-1,1))
 dev.off()
 ```
