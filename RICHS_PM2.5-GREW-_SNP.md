@@ -101,14 +101,19 @@ GWAS_modules_GREW<-GWAS_module_enrich%>%
   dplyr::select(Module,Gene,Trait)
 
 #Figures of top GWAS traits
-RICHS_WGCNA_GWAS_traits_GREW<-GWAS_modules_GREW%>%
+RICHS_WGCNA_GWAS_traits_GREW<-
+  GWAS_modules_GREW%>%
+  mutate(Trait=gsub("\\(.+?\\)","",Trait),
+         Trait=str_trim(Trait))%>%
   count(Module,Trait)%>%
   group_by(Module)%>%
-  mutate(prop=n/sum(n))%>%
+    mutate(prop=n/sum(n))%>%
   arrange(Module,desc(n))%>%
   group_by(Module)%>%
-  top_n(5)%>%
-  mutate(Trait=gsub("\\(.+?\\)","",Trait))%>%
+ slice_max(order_by=n,n=5,with_ties=FALSE)%>%
+  mutate(Trait=ifelse(Trait=="3-hydroxypropylmercapturic acid levels in smokers","HPMA levels in smokers",
+                      ifelse(Trait=="Age-related hearing impairment","Hearing impairment with age",
+         ifelse(Trait=="Coronary artery disease or large artery stroke","Coronary artery disease/Stroke",as.character(Trait)))))%>%
   ggplot(.,aes(x=Trait,y=prop))+
   geom_bar(stat="identity")+
   theme_bw()+
@@ -124,7 +129,7 @@ RICHS_WGCNA_GWAS_traits_GREW
 ![](RICHS_PM2.5-GREW-_SNP_files/figure-gfm/GWAS_eQTL_SNP_info-1.png)<!-- -->
 
 ``` r
-pdf('Plots/RICHS_WGCNA_GWAS_traits_GREW.pdf')
+pdf('Plots/RICHS_WGCNA_GWAS_traits_GREW.pdf',height=10,width=15)
 RICHS_WGCNA_GWAS_traits_GREW
 dev.off()
 
@@ -311,7 +316,7 @@ GenEx_GWAS_GREW_AOV<-GenEx_GWAS_GREW%>%
   filter(FDR<0.05)%>% #38 SNPs
   arrange(FDR)
 
-dbSNP_GREW%>%filter(SNP%in%GenEx_GWAS_GREW_AOV$SNP[GenEx_GWAS_GREW_AOV$FDR<0.05])%>%dplyr::select(Gene,Module,Trait) %>% drop_na(Trait)%>% distinct()
+dbSNP_GREW%>%filter(SNP%in%GenEx_GWAS_GREW_AOV$SNP[GenEx_GWAS_GREW_AOV$FDR<0.05])%>%dplyr::select(Gene,Module,Trait) %>% drop_na(Trait)%>% distinct()%>%arrange(Gene)
 
 #    Gene    Module                                                 Trait
 #    CEP120      blue                                                Weight
@@ -409,8 +414,8 @@ RICHS_WGCNA_GWAS_eSNPs_LRP1_GREW<-GenEx_GWAS_GREW%>%
   labs(x="rs11172113",y="LRP1 log2 expression")+
   theme_bw()+
   theme(legend.position = "none",
-        axis.title=element_text(face="bold",size=40),
-        axis.text=element_text(size=38))
+        axis.title=element_text(face="bold",size=20),
+        axis.text=element_text(size=18))
 
 RICHS_WGCNA_GWAS_eSNPs_LRP1_GREW
 ```
@@ -578,8 +583,8 @@ RICHS_WGCNA_GenEx_BW_GREW_LRP1<-GenEx_GWAS_GREW_BW%>%
   theme_bw()+
   theme(legend.position = "none",
         axis.title.x=element_blank(),
-        axis.title.y=element_text(face="bold",size=40),
-        axis.text=element_text(size=38))
+        axis.title.y=element_text(face="bold",size=20),
+        axis.text=element_text(size=18))
 
 RICHS_WGCNA_GenEx_BW_GREW_LRP1
 ```
