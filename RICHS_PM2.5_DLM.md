@@ -1,20 +1,20 @@
 ## Analysis Description
 
 This is an R Markdown document outlining the Weekly PM2.5 DLM analysis
-with respect to SGA and LGA status.  
-In the SGA analysis, the model with the lowest AIC had 1 df. While there
-was no overall association between PM2.5 and SGA status, a significant
-window was observed ranging from 2 weeks prior to gestation and 14 weeks
-after conception.  
+with respect to birthweight percentiles, SGA and LGA status.
+
+Modeling BW as a continuous outcome (Fenton percentiles, 1 df), we
+observe a significant inverse association from 12 weeks prior to
+conception until 13 weeks gestation. In the SGA analysis, the model with
+the lowest AIC had 1 df. While there was no overall association between
+PM2.5 and SGA status, a significant window was observed ranging from 2
+weeks prior to gestation and 14 weeks after conception.  
 In the LGA analysis, the model with the lowest AIC had 3 df. There was
 an overall inverse association between PM2.5 and LGA status. An inverse
 association with LGA status was observed during a window ranging from 3
 weeks prior to gestation to 8 weeks of gestation. An positive
 association with LGA status was observed during a window ranging from
-29-32 weeks gestation.  
-Modeling BW as a continuous outcome (Fenton percentiles, 1 df), we
-observe a significant inverse association from 12 weeks prior to
-conception until 13 weeks gestation.
+29-32 weeks gestation.
 
 In the sex-stratified analysis, a significant SGA window was observed
 from 12 weeks to 7 weeks prior to conception among boys and 7 weeks and
@@ -102,7 +102,7 @@ Q2 <- as.matrix(Demo[,18:ncol(Demo)])
 
 mod <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin",cen=0),
+   cbpmi = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod[[i]] <- glm(F13perc~ cbpmi + factor(Sex) +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo, family=gaussian) 
@@ -194,7 +194,7 @@ sum_models$MODEL1 #1 degree of freedom ** lowest AIC
 ###########################    Model 1
 Q2 <- as.matrix(Demo[,18:ncol(Demo)])
 
-cb1 = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin",cen=0),
+cb1 = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=1))
 
 
@@ -202,18 +202,19 @@ model1  <- glm(F13perc~ cb1 + factor(Sex) +GestAge+MomAge
           +factor(Edu)+factor(Season), data=Demo, family=gaussian)
 
 
-#####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95)
+#####your final prediction for values ranging from 1 to 20ug/m3, with reference value at 0 ug/m3
+pred1<- crosspred(cb1,model1,at=1:20,ci.level=0.95,cen=0)
 
-###### plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
+###### plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
 
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile",main="Lag-response a 10-unit increase above threshold (95CI)")
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile",main="Lag-response a 1-unit increase above threshold (95CI)")
 
 
 ######## plot your final prediction (ggplot2)
+
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -233,11 +234,12 @@ DLM_BWperc_plot<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 0, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
+  #labs(x="Gestational Week",y=bquote(atop("Change in birthweight percentile",
+  #                                        "per 2 ug/" * m^3  ~ "increase in"~PM[2.5])))+
   theme_classic()+
-  theme(
-  axis.title = element_blank())+
+  theme(axis.title = element_blank())+
   theme(axis.text=element_text(size=24,  face="bold"))
 
 DLM_BWperc_plot
@@ -251,14 +253,16 @@ DLM_BWperc_plot
 dev.off()
 ```
 
-## Output Fenton percentile predicted fit and intervals
+## Output Fenton percentile predicted fit and intervals (cumulative and specific timepoints)
 
 ``` r
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
 
 with(pred1, c(allfit,alllow,allhigh))
-#        5         5         5 
-# -23.1365995 -46.7302222   0.4570231
+#        1         1         1 
+#-4.62731991 -9.34604443  0.09140462
 
 prd<-with(pred1, c(matfit))
 prdlow<-with(pred1, c(matlow))
@@ -283,7 +287,7 @@ Q2 <- as.matrix(SGA[,18:ncol(SGA)])
 
 mod <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin",cen=1),
+   cbpmi = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod[[i]] <- glm(F13Group~ cbpmi + factor(Sex) +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=SGA, family=binomial) 
@@ -375,7 +379,7 @@ sum_models$MODEL1 #1 degree of freedom ** lowest AIC
 ###########################    Model 1
 Q2 <- as.matrix(SGA[,18:ncol(SGA)])
 
-cb1 = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin",cen=1),
+cb1 = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=1))
 
 
@@ -383,16 +387,16 @@ model1  <- glm(F13Group~ cb1 + factor(Sex) +GestAge+MomAge
           +factor(Edu)+factor(Season), data=SGA, family=binomial)
 
 
-#####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95)
+#####your final prediction for values ranging from 1 to 20ug/m3, with reference value at 0 ug/m3
+pred1<- crosspred(cb1,model1,ci.level=0.95,at=1:20,cen=0)
 
-######plot final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA",main="Lag-response a 10-unit increase above threshold (95CI)")
+######plot final prediction var=5, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA",main="Lag-response a 1-unit increase above threshold (95CI)")
 
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -412,8 +416,8 @@ SGA_DLM_plot<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -430,13 +434,15 @@ SGA_DLM_plot
 dev.off()
 ```
 
-## Output SGA predicted fit and intervals
+## Output SGA predicted fit and intervals (cumulative and at specific time points)
 
 ``` r
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
 with(pred1, c(allRRfit,allRRlow,allRRhigh))
-#        5         5         5 
-# 8.670631  1.395937 53.856171 
+#        1         1         1 
+# 1.715982 1.086967 2.708999  
 
 prd<-with(pred1, c(matRRfit))
 prdlow<-with(pred1, c(matRRlow))
@@ -461,7 +467,7 @@ Q2 <- as.matrix(LGA[,18:ncol(LGA)])
 
 mod <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin",cen=1),
+   cbpmi = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod[[i]] <- glm(F13Group~ cbpmi + factor(Sex) +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=LGA, family=binomial) 
@@ -554,7 +560,7 @@ sum_models$MODEL3 #3 degree of freedom
 ``` r
 Q2 <- as.matrix(LGA[,18:ncol(LGA)])
 
-cb1 = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin",cen=1),
+cb1 = crossbasis(Q2, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=3))
 
 
@@ -563,15 +569,20 @@ model3  <- glm(F13Group~ cb1 + factor(Sex) +GestAge+MomAge
 
 
 #####your final prediction 
-pred1<- crosspred(cb1,model3,ci.level=0.95)
+pred1<- crosspred(cb1,model3,ci.level=0.95,at=1:20,cen=0)
 
-###### plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA",main="Lag-response a 10-unit increase above threshold (95CI)")
 
+###### plot your final prediction var=5, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
+plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA",main="Lag-response a 1-unit increase above threshold (95CI)")
+```
+
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
+
+``` r
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -591,8 +602,8 @@ DLM_LGA_plot<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -601,7 +612,7 @@ DLM_LGA_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_LGA_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-2.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_LGA.pdf",width=6,height=6)
@@ -609,13 +620,15 @@ DLM_LGA_plot
 dev.off()
 ```
 
-## Output LGA predicted fit and intervals
+## Output LGA predicted fit and intervals (cumulative and at specific time points)
 
 ``` r
-pred3<- crosspred(cb1,model3,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred3<- crosspred(cb1,model3,ci.level=0.95, at=1) #at = unit increase
 with(pred3, c(allRRfit,allRRlow,allRRhigh))
-#        5         5         5 
-# 0.7515577 0.2036376 2.7737459 
+#        1         1         1 
+#0.9310877 0.6717606 1.2905257
 
 prd<-with(pred3, c(matRRfit))
 prdlow<-with(pred3, c(matRRlow))
@@ -746,7 +759,7 @@ Q2_F <- as.matrix(Demo_F[,18:ncol(Demo_F)])
 
 mod_F <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=0),
+   cbpmi = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod_F[[i]] <- glm(F13perc~ cbpmi + +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo_F, family=gaussian) 
@@ -763,7 +776,7 @@ sum_models_F = lapply(mod_F,summary)
 sum_models_F$MODEL1 #1 degree of freedom ** lowest AIC
 
 
-cb1 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=0),
+cb1 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=1))
 
 
@@ -771,17 +784,17 @@ model1  <- glm(F13perc~ cb1 + GestAge+MomAge
           +factor(Edu)+factor(Season), data=Demo_F, family=gaussian)
 
 
-#####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95)
+#####your final prediction for values ranging from 1 to 20ug/m3, with reference value at 0 ug/m3
+pred1<- crosspred(cb1,model1,ci.level=0.95,cen=0,at=1:20)
 
-######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
+######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
 
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Females",main="Lag-response a 10-unit increase above threshold (95CI)")
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Females",main="Lag-response a 1-unit increase above threshold (95CI)")
 
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -801,8 +814,8 @@ DLM_BWperc_plot_Female<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 0, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -818,11 +831,13 @@ pdf("Plots/PM25_DLM_F13perc_Female.pdf",width=6,height=6)
 DLM_BWperc_plot_Female
 dev.off()
 
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1,cen=0) #at = unit increase
 summary(model1)
 with(pred1, c(allfit,alllow,allhigh))
-#        5         5         5 
-# -37.0119051 -73.8936639  -0.1301463
+#        1         1         1 
+# -7.40238102 -14.77873279  -0.02602925 
 
 prd<-with(pred1, c(matfit))
 prdlow<-with(pred1, c(matlow))
@@ -839,7 +854,7 @@ Q2_M <- as.matrix(Demo_M[,18:ncol(Demo_M)])
 
 mod_M <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=0),
+   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod_M[[i]] <- glm(F13perc~ cbpmi + +GestAge+MomAge 
           +factor(Edu)+factor(Season), data=Demo_M, family=gaussian) 
@@ -857,7 +872,7 @@ sum_models_M = lapply(mod_M,summary)
 sum_models_M$MODEL1 #1 degree of freedom ** lowest AIC
 
 
-cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=0),
+cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=1))
 
 
@@ -865,17 +880,21 @@ model1  <- glm(F13perc~ cb1 + GestAge+MomAge
           +factor(Edu)+factor(Season), data=Demo_M, family=gaussian)
 
 
-#####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95)
+#####your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
+pred1<- crosspred(cb1,model1,ci.level=0.95, cen=0, at=1:20)
 
-######plot final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
+######plot final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
 
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Males",main="Lag-response a 10-unit increase above threshold (95CI)")
+plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Males",main="Lag-response a 1-unit increase above threshold (95CI)")
+```
 
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
+
+``` r
 ######## plot final prediction (ggplot)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -896,8 +915,8 @@ ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 0, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -906,19 +925,21 @@ ggplot(predpmdt, aes(x, y)) +
 DLM_BWperc_plot_Male
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-3.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_F13perc_Male.pdf",width=6,height=6)
 DLM_BWperc_plot_Male
 dev.off()
 
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
 
 summary(model1)
 with(pred1, c(allfit,alllow,allhigh))
-#        5         5         5 
-# -13.60581 -46.06232  18.85069 
+#        1         1         1 
+#-2.721163 -9.212465  3.770139  
 
 prd<-with(pred1, c(matfit))
 prdlow<-with(pred1, c(matlow))
@@ -948,7 +969,7 @@ Q2_F <- as.matrix(SGA_F[,18:ncol(SGA_F)])
 
 mod_F <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=1),
+   cbpmi = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod_F[[i]] <- glm(F13Group~ cbpmi + GestAge+MomAge 
           +factor(Edu)+factor(Season), data=SGA_F, family=binomial) 
@@ -965,7 +986,7 @@ sum_models_F = lapply(mod_F,summary)
 
 sum_models_F$MODEL1 #2 degrees of freedom
 
-cb1 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=1),
+cb1 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=1))
 
 
@@ -974,15 +995,15 @@ model1  <- glm(F13Group~ cb1 + GestAge+MomAge
 
 
 #####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95)
+pred1<- crosspred(cb1,model1,ci.level=0.95,cen=0,at=1:20)
 
-######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5
+######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5
 
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA among females",main="Lag-response a 10-unit increase above threshold (95CI)")
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA among females",main="Lag-response a 1-unit increase above threshold (95CI)")
 ######## ggplot2
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -1002,8 +1023,8 @@ DLM_SGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -1019,11 +1040,12 @@ pdf("Plots/PM25_DLM_SGA_Females.pdf",width=6,height=6)
 DLM_SGA_female_plot
 dev.off()
 
-#print out predictions
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
 with(pred1, c(allRRfit,allRRlow,allRRhigh))
-#        5         5         5 
-# 21.088241   1.423318 312.448737 
+#       1        1        1 
+#2.142940 1.092259 4.204310 
 
 prd<-with(pred1, c(matRRfit))
 prdlow<-with(pred1, c(matRRlow))
@@ -1039,7 +1061,7 @@ Q2_M <- as.matrix(SGA_M[,18:ncol(SGA_M)])
 
 mod_M <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=1),
+   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod_M[[i]] <- glm(F13Group~ cbpmi + GestAge+MomAge 
           +factor(Edu)+factor(Season), data=SGA_M, family=binomial) 
@@ -1055,7 +1077,7 @@ aic_models_M
 sum_models_M = lapply(mod_M,summary)
 
 sum_models_M$MODEL2 #2 degrees of freedom
-cb2 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=1),
+cb2 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=2))
 
 
@@ -1064,15 +1086,15 @@ model2  <- glm(F13Group~ cb2 + GestAge+MomAge
 
 
 #####your final prediction 
-pred2<- crosspred(cb2,model2,ci.level=0.95)
+pred2<- crosspred(cb2,model2,ci.level=0.95,cen=0,at=1:20)
 
-######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5
-#plot(pred2, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA among males",main="Lag-response a 10-unit increase above threshold (95CI)")
+######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5
+#plot(pred2, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of SGA among males",main="Lag-response a 1-unit increase above threshold (95CI)")
 
 ######## ggplot2
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred2$lag, pred2$bylag),
@@ -1093,8 +1115,8 @@ ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -1111,10 +1133,12 @@ DLM_SGA_male_plot
 dev.off()
 
 #print out predictions
-pred2<- crosspred(cb2,model2,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred2<- crosspred(cb2,model2,ci.level=0.95, at=1,cen=0) #at = unit increase
 with(pred2, c(allRRfit,allRRlow,allRRhigh))
-#        5         5         5 
-# 8.7280469   0.5231815 145.6068323 
+#        1         1         1
+#1.718816 0.850478 3.473725
 
 prd<-with(pred2, c(matRRfit))
 prdlow<-with(pred2, c(matRRlow))
@@ -1144,7 +1168,7 @@ Q2_M <- as.matrix(LGA_M[,18:ncol(LGA_M)])
 
 mod_M <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=1),
+   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod_M[[i]] <- glm(F13Group~ cbpmi + GestAge+MomAge 
           +factor(Edu)+factor(Season), data=LGA_M, family=binomial) 
@@ -1161,7 +1185,7 @@ sum_models_M = lapply(mod_M,summary)
 
 sum_models_M$MODEL1 #1 degrees of freedom
 
-cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin",cen=1),
+cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=1))
 
 
@@ -1170,15 +1194,15 @@ model1  <- glm(F13Group~ cb1 + GestAge+MomAge
 
 
 #####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95)
+pred1<- crosspred(cb1,model1,ci.level=0.95,cen=0,at=1:20)
 
-######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
+######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
 
-#plot(pred1, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among males",main="Lag-response a 10-unit increase above threshold (95CI)")
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among males",main="Lag-response a 1-unit increase above threshold (95CI)")
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
@@ -1198,8 +1222,8 @@ DLM_LGA_male_plot<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -1215,10 +1239,12 @@ DLM_LGA_male_plot
 dev.off()
 
 #print out predictions
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
 with(pred1, c(allRRfit,allRRlow,allRRhigh))
-#        5         5         5 
-# 1.256965 0.215488 7.332015
+#        1         1         1 
+#1.0588411 0.6813273 1.6455301 
 
 prd<-with(pred1, c(matRRfit))
 prdlow<-with(pred1, c(matRRlow))
@@ -1235,7 +1261,7 @@ Q2_F <- as.matrix(LGA_F[,18:ncol(LGA_F)])
 
 mod_F <- list()
  for (i in 1:10) {
-   cbpmi = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=1),
+   cbpmi = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=i))
       mod_F[[i]] <- glm(F13Group~ cbpmi + GestAge+MomAge 
           +factor(Edu)+factor(Season), data=LGA_F, family=binomial) 
@@ -1252,7 +1278,7 @@ sum_models_F = lapply(mod_F,summary)
 
 sum_models_F$MODEL3 #3 degrees of freedom
 
-cb3 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin",cen=1),
+cb3 = crossbasis(Q2_F, lag=c(1,53),argvar=list(fun="lin"),
                       arglag=list(fun="bs",degree=3))
 
 
@@ -1261,15 +1287,15 @@ model3  <- glm(F13Group~ cb3 + GestAge+MomAge
 
 
 #####your final prediction 
-pred3<- crosspred(cb3,model3,ci.level=0.95)
+pred3<- crosspred(cb3,model3,ci.level=0.95,cen=0,at=1:20)
 
-######plot your final prediction var=5, refers to a 5 ug/m3 increase in PM2.5 (basic plot)
+######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
 
-#plot(pred3, "slices", var=5, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among females",main="Lag-response a 10-unit increase above threshold (95CI)")
+#plot(pred3, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among females",main="Lag-response a 1-unit increase above threshold (95CI)")
 ########plot your final prediction  (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(10)
+xvar <- as.character(1)
 
 # store predictions into a data.frame
 predpmdt <- data.table(x=seqlag(pred3$lag, pred3$bylag),
@@ -1289,8 +1315,8 @@ DLM_LGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
   geom_vline(xintercept = c(12,49), linetype="dotted", 
                 color = "black", size=1)+
   geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("pre12", "0", "12",  "24", "36"))+
-  #scale_y_continuous(breaks=c(0.96, 0.98, 1.00, 1.02, 1.04), label=c("0.80", "0.90","1.00", "1.10", "1.20"))+
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   theme_classic()+
   theme(
   axis.title = element_blank())+
@@ -1307,10 +1333,12 @@ DLM_LGA_female_plot
 dev.off()
 
 #print out predictions
-pred3<- crosspred(cb3,model3,ci.level=0.95, at=5) #at = unit increase
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred3<- crosspred(cb3,model3,ci.level=0.95, at=1,cen=0) #at = unit increase
 with(pred3, c(allRRfit,allRRlow,allRRhigh))
-#        5         5         5 
-# 0.42348373 0.04864201 3.68690521 
+#        1          1       1
+#0.8066947 0.4696268 1.3856881  
 
 prd<-with(pred3, c(matRRfit))
 prdlow<-with(pred3, c(matRRlow))
