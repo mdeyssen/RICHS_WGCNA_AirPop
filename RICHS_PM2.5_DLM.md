@@ -237,7 +237,7 @@ DLM_BWperc_plot<-ggplot(predpmdt, aes(x, y)) +
   scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
   scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
   #labs(x="Gestational Week",y=bquote(atop("Change in birthweight percentile",
-  #                                        "per 2 ug/" * m^3  ~ "increase in"~PM[2.5])))+
+  #                                        "per 1 ug/" * m^3  ~ "increase in"~PM[2.5])))+
   theme_classic()+
   theme(axis.title = element_blank())+
   theme(axis.text=element_text(size=24,  face="bold"))
@@ -573,12 +573,8 @@ pred1<- crosspred(cb1,model3,ci.level=0.95,at=1:20,cen=0)
 
 
 ###### plot your final prediction var=5, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
-plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA",main="Lag-response a 1-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA",main="Lag-response a 1-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
-
-``` r
 ######## plot your final prediction (ggplot2)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -612,7 +608,7 @@ DLM_LGA_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_LGA_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLMplot_LGA-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_LGA.pdf",width=6,height=6)
@@ -885,12 +881,8 @@ pred1<- crosspred(cb1,model1,ci.level=0.95, cen=0, at=1:20)
 
 ######plot final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
 
-plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Males",main="Lag-response a 1-unit increase above threshold (95CI)")
-```
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Fenton Percentile among Males",main="Lag-response a 1-unit increase above threshold (95CI)")
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
-
-``` r
 ######## plot final prediction (ggplot)
 seqlag <-
   function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
@@ -925,7 +917,7 @@ ggplot(predpmdt, aes(x, y)) +
 DLM_BWperc_plot_Male
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-3.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_BWperc_sex-2.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_F13perc_Male.pdf",width=6,height=6)
@@ -1163,99 +1155,6 @@ LGA_M<-Demo%>%
   mutate(F13Group=factor(F13Group,levels=c("AGA","LGA")))%>%
   filter(Sex=="Male")
 
-###################################### Males
-Q2_M <- as.matrix(LGA_M[,18:ncol(LGA_M)])
-
-mod_M <- list()
- for (i in 1:10) {
-   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
-                      arglag=list(fun="bs",degree=i))
-      mod_M[[i]] <- glm(F13Group~ cbpmi + GestAge+MomAge 
-          +factor(Edu)+factor(Season), data=LGA_M, family=binomial) 
-  }
-names(mod_M) <- paste0("MODEL", 1:10)
-#AIC of models
-aic_models_M = lapply(mod_M, AIC)
-names(aic_models_M) <- paste0("MODEL", 1:10)
-# Choosing the best model based on the lower AIC
-aic_models_M
-# # Summary of the selected model
-#sum_models = llply(mod,summary)
-sum_models_M = lapply(mod_M,summary)
-
-sum_models_M$MODEL1 #1 degrees of freedom
-
-cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
-                      arglag=list(fun="bs",degree=1))
-
-
-model1  <- glm(F13Group~ cb1 + GestAge+MomAge 
-          +factor(Edu)+factor(Season), data=LGA_M, family=binomial)
-
-
-#####your final prediction 
-pred1<- crosspred(cb1,model1,ci.level=0.95,cen=0,at=1:20)
-
-######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
-
-#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among males",main="Lag-response a 1-unit increase above threshold (95CI)")
-######## plot your final prediction (ggplot2)
-seqlag <-
-  function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
-xvar <- as.character(1)
-
-# store predictions into a data.frame
-predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
-                       y=pred1$matRRfit[xvar[1],],
-                       high=pred1$matRRhigh[xvar[1],],
-                       # this is the lower bound of the CI 
-                       low=pred1$matRRlow [xvar[1],])
-
-pred1$ci
-
-predpmdt[, range(which(low > 0))]
-mycibounds <- data.table(x = predpmdt[, range(which(low > 0))] - 1)
-
-DLM_LGA_male_plot<-ggplot(predpmdt, aes(x, y)) + 
-  geom_ribbon(aes(ymin = low, ymax = high), fill = "grey70") + 
-  geom_line(color="black", size=1) + 
-  geom_vline(xintercept = c(12,49), linetype="dotted", 
-                color = "black", size=1)+
-  geom_hline(yintercept = 1, color = "black")+  
-  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
-  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
-  theme_classic()+
-  theme(
-  axis.title = element_blank())+
-  theme(axis.text=element_text(size=24,  face="bold"))
-DLM_LGA_male_plot
-```
-
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-1.png)<!-- -->
-
-``` r
-pdf("Plots/PM25_DLM_LGA_Males.pdf",width=6,height=6)
-DLM_LGA_male_plot
-dev.off()
-
-#print out predictions
-#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
-#summing all the contributions up to the maximum lag)
-pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
-with(pred1, c(allRRfit,allRRlow,allRRhigh))
-#        1         1         1 
-#1.0588411 0.6813273 1.6455301 
-
-prd<-with(pred1, c(matRRfit))
-prdlow<-with(pred1, c(matRRlow))
-prdhigh<-with(pred1, c(matRRhigh))
-
-prd_all<-as.data.frame(cbind(RiskR=round(prd,2),RRlow=round(prdlow,2),RRhigh=round(prdhigh,2)))
-prd_all$week<-c(paste0('pre',rev(1:12)),0:40)
-
-write.csv(prd_all, file = "Data/PM25_DLM_LGA_Males_predfit.csv",row.names=FALSE)
-
-
 ###################################### Females
 Q2_F <- as.matrix(LGA_F[,18:ncol(LGA_F)])
 
@@ -1325,7 +1224,7 @@ DLM_LGA_female_plot<-ggplot(predpmdt, aes(x, y)) +
 DLM_LGA_female_plot
 ```
 
-![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-2.png)<!-- -->
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-1.png)<!-- -->
 
 ``` r
 pdf("Plots/PM25_DLM_LGA_Females.pdf",width=6,height=6)
@@ -1348,4 +1247,95 @@ prd_all<-as.data.frame(cbind(RiskR=round(prd,2),RRlow=round(prdlow,2),RRhigh=rou
 prd_all$week<-c(paste0('pre',rev(1:12)),0:40)
 
 write.csv(prd_all, file = "Data/PM25_DLM_LGA_Females_predfit.csv",row.names=FALSE)
+###################################### Males
+Q2_M <- as.matrix(LGA_M[,18:ncol(LGA_M)])
+
+mod_M <- list()
+ for (i in 1:10) {
+   cbpmi = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
+                      arglag=list(fun="bs",degree=i))
+      mod_M[[i]] <- glm(F13Group~ cbpmi + GestAge+MomAge 
+          +factor(Edu)+factor(Season), data=LGA_M, family=binomial) 
+  }
+names(mod_M) <- paste0("MODEL", 1:10)
+#AIC of models
+aic_models_M = lapply(mod_M, AIC)
+names(aic_models_M) <- paste0("MODEL", 1:10)
+# Choosing the best model based on the lower AIC
+aic_models_M
+# # Summary of the selected model
+#sum_models = llply(mod,summary)
+sum_models_M = lapply(mod_M,summary)
+
+sum_models_M$MODEL1 #1 degrees of freedom
+
+cb1 = crossbasis(Q2_M, lag=c(1,53),argvar=list(fun="lin"),
+                      arglag=list(fun="bs",degree=1))
+
+
+model1  <- glm(F13Group~ cb1 + GestAge+MomAge 
+          +factor(Edu)+factor(Season), data=LGA_M, family=binomial)
+
+
+#####your final prediction 
+pred1<- crosspred(cb1,model1,ci.level=0.95,cen=0,at=1:20)
+
+######plot your final prediction var=1, refers to a 1 ug/m3 increase in PM2.5 (basic plot)
+
+#plot(pred1, "slices", var=1, ci="bars", type="p", col=1, pch=19,ci.level=0.95, ylab= "Odds of LGA among males",main="Lag-response a 1-unit increase above threshold (95CI)")
+######## plot your final prediction (ggplot2)
+seqlag <-
+  function(lag,by=1) seq(from=lag[1],to=lag[2],by=by) 
+xvar <- as.character(1)
+
+# store predictions into a data.frame
+predpmdt <- data.table(x=seqlag(pred1$lag, pred1$bylag),
+                       y=pred1$matRRfit[xvar[1],],
+                       high=pred1$matRRhigh[xvar[1],],
+                       # this is the lower bound of the CI 
+                       low=pred1$matRRlow [xvar[1],])
+
+pred1$ci
+
+predpmdt[, range(which(low > 0))]
+mycibounds <- data.table(x = predpmdt[, range(which(low > 0))] - 1)
+
+DLM_LGA_male_plot<-ggplot(predpmdt, aes(x, y)) + 
+  geom_ribbon(aes(ymin = low, ymax = high), fill = "grey70") + 
+  geom_line(color="black", size=1) + 
+  geom_vline(xintercept = c(12,49), linetype="dotted", 
+                color = "black", size=1)+
+  geom_hline(yintercept = 1, color = "black")+  
+  scale_x_continuous(breaks=c(0,12,24,36,48),label = c("-12", "0", "12",  "24", "36"))+
+  scale_y_continuous(labels = scales::number_format(accuracy = 0.01))+
+  theme_classic()+
+  theme(
+  axis.title = element_blank())+
+  theme(axis.text=element_text(size=24,  face="bold"))
+DLM_LGA_male_plot
+```
+
+![](RICHS_PM2.5_DLM_files/figure-gfm/DLM_LGA_sex-2.png)<!-- -->
+
+``` r
+pdf("Plots/PM25_DLM_LGA_Males.pdf",width=6,height=6)
+DLM_LGA_male_plot
+dev.off()
+
+#print out predictions
+#The overall cumulative effect of a 1-unit increase in PM2.5 over total lag period (i.e.
+#summing all the contributions up to the maximum lag)
+pred1<- crosspred(cb1,model1,ci.level=0.95, at=1) #at = unit increase
+with(pred1, c(allRRfit,allRRlow,allRRhigh))
+#        1         1         1 
+#1.0588411 0.6813273 1.6455301 
+
+prd<-with(pred1, c(matRRfit))
+prdlow<-with(pred1, c(matRRlow))
+prdhigh<-with(pred1, c(matRRhigh))
+
+prd_all<-as.data.frame(cbind(RiskR=round(prd,2),RRlow=round(prdlow,2),RRhigh=round(prdhigh,2)))
+prd_all$week<-c(paste0('pre',rev(1:12)),0:40)
+
+write.csv(prd_all, file = "Data/PM25_DLM_LGA_Males_predfit.csv",row.names=FALSE)
 ```
